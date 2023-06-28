@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:systemMetadata xmlns:ns2="http://ns.dataone.org/service/types/v1" xmlns:ns3="http://ns.dataone.org/service/types/v2.0">
+    <serialVersion>2</serialVersion>
+    <identifier>resource_map_doi:10.18739/A25T3FZ8X</identifier>
+    <formatId>http://www.openarchives.org/ore/terms</formatId>
+    <size>24589</size>
+    <checksum algorithm="SHA1">bfa88d366147d9ac0a8f9f25951aa59dab94bac8</checksum>
+    <submitter>http://orcid.org/0000-0002-7822-2303</submitter>
+    <rightsHolder>http://orcid.org/0000-0002-3409-8881</rightsHolder>
+    <accessPolicy>
+        <allow>
+            <subject>http://orcid.org/0000-0001-7324-3159 </subject>
+            <permission>read</permission>
+            <permission>write</permission>
+            <permission>changePermission</permission>
+        </allow>
+        <allow>
+            <subject>public</subject>
+            <permission>read</permission>
+        </allow>
+        <allow>
+            <subject>http://orcid.org/0000-0001-7324-3159</subject>
+            <permission>read</permission>
+            <permission>write</permission>
+            <permission>changePermission</permission>
+        </allow>
+        <allow>
+            <subject>http://orcid.org/0000-0001-9169-0286 </subject>
+            <permission>read</permission>
+            <permission>write</permission>
+            <permission>changePermission</permission>
+        </allow>
+        <allow>
+            <subject>CN=arctic-data-admins,DC=dataone,DC=org</subject>
+            <permission>read</permission>
+            <permission>write</permission>
+            <permission>changePermission</permission>
+        </allow>
+    </accessPolicy>
+    <replicationPolicy replicationAllowed="false" numberReplicas="0">
+        <blockedMemberNode>urn:node:KNB</blockedMemberNode>
+        <blockedMemberNode>urn:node:mnUCSB1</blockedMemberNode>
+    </replicationPolicy>
+    <obsoletes>resource_map_doi:10.18739/A2542J770</obsoletes>
+    <archived>false</archived>
+    <dateUploaded>2018-05-30T20:25:03.745+00:00</dateUploaded>
+    <dateSysMetadataModified>2019-06-27T17:15:08.223+00:00</dateSysMetadataModified>
+    <originMemberNode>urn:node:ARCTIC</originMemberNode>
+    <authoritativeMemberNode>urn:node:ARCTIC</authoritativeMemberNode>
+    <replica>
+        <replicaMemberNode>urn:node:CN</replicaMemberNode>
+        <replicationStatus>completed</replicationStatus>
+        <replicaVerified>2018-05-30T20:25:20.585+00:00</replicaVerified>
+    </replica>
+    <replica>
+        <replicaMemberNode>urn:node:ARCTIC</replicaMemberNode>
+        <replicationStatus>completed</replicationStatus>
+        <replicaVerified>2019-08-31T15:47:12.929+00:00</replicaVerified>
+    </replica>
+    <fileName>resource_map_doi_10_18739_A25T3FZ8X.rdf.xml</fileName>
+</ns3:systemMetadata>

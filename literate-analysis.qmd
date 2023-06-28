@@ -1,0 +1,52 @@
+---
+title: "Literate Analysis"
+author: "Xoco Shinbrot"
+format: html
+---
+##Introduction
+
+### About the data
+This data is from the North Pole Environmental Observatory Bottle Chemistry, collected in April or May 2000 to 2014.
+
+You can find the data at [this link] (https://arcticdata.io/catalog/view/doi:10.18739/A25T3FZ8X)
+
+### Setup
+```{r}
+library(readr)
+```
+
+### Read data
+```{r}
+bg_chem <- read_csv("~/training_shinbrot/data/data/BGchem2008data.csv")
+
+```
+
+
+### Analysis
+```{r}
+str (bg_chem)
+summary (bg_chem)
+unique (bg_chem$Date)
+```
+
+### Calculate summary statistics
+```{r}
+nitrate <-bg_chem$NO3
+nitrite <-mean(bg_chem$NO2)
+amm <- mean(bg_chem$NH4)
+phos <- mean (bg_chem$P)
+```
+
+### Calculate mean Redfield ratio
+```{r}
+ratio <- mean (nitrate +nitrite +amm)/phos
+```
+
+### Plot Redfield Ratio
+```{r}
+plot(bg_chem$P, bg_chem$NO3 + bg_chem$NO2 +bg_chem$NH4)
+```
+
+###Conclusion
+
+The redfield ratio for this data is approximately `r round(ratio)`

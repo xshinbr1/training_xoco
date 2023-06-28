@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:systemMetadata xmlns:ns2="http://ns.dataone.org/service/types/v1" xmlns:ns3="http://ns.dataone.org/service/types/v2.0">
+    <serialVersion>2</serialVersion>
+    <identifier>urn:uuid:54b5b4a4-a3f2-472a-b400-f6602fce9f0a</identifier>
+    <formatId>text/csv</formatId>
+    <size>20271</size>
+    <checksum algorithm="SHA1">d2a297b4c0e32aa31b5ec7015896be4762681509</checksum>
+    <submitter>http://orcid.org/0000-0002-7822-2303</submitter>
+    <rightsHolder>http://orcid.org/0000-0002-3409-8881</rightsHolder>
+    <accessPolicy>
+        <allow>
+            <subject>CN=arctic-data-admins,DC=dataone,DC=org</subject>
+            <permission>read</permission>
+            <permission>write</permission>
+            <permission>changePermission</permission>
+        </allow>
+        <allow>
+            <subject>public</subject>
+            <permission>read</permission>
+        </allow>
+    </accessPolicy>
+    <replicationPolicy replicationAllowed="false" numberReplicas="0">
+        <blockedMemberNode>urn:node:KNB</blockedMemberNode>
+        <blockedMemberNode>urn:node:mnUCSB1</blockedMemberNode>
+    </replicationPolicy>
+    <archived>false</archived>
+    <dateUploaded>2018-05-25T19:17:20.787+00:00</dateUploaded>
+    <dateSysMetadataModified>2019-06-27T17:15:10.630+00:00</dateSysMetadataModified>
+    <originMemberNode>urn:node:ARCTIC</originMemberNode>
+    <authoritativeMemberNode>urn:node:ARCTIC</authoritativeMemberNode>
+    <replica>
+        <replicaMemberNode>urn:node:ARCTIC</replicaMemberNode>
+        <replicationStatus>completed</replicationStatus>
+        <replicaVerified>2019-09-08T10:47:53.746+00:00</replicaVerified>
+    </replica>
+    <fileName>NPEOchemdata2011.csv</fileName>
+</ns3:systemMetadata>

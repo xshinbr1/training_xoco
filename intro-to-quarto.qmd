@@ -1,0 +1,23 @@
+---
+title: "Introduction to Quarto"
+format: html
+bibliography: references.bib
+---
+
+## Second header
+
+This is text
+
+### Third header
+
+I want *this* to be italic while **this** is bold. If I want a list I can go
+
+1.  Item 1
+2.  Item 2
+
+-   Item 2a This fact [@shinbrot2019]
+
+```{r}
+x <-4*8
+
+coef<- 3.14
