@@ -1,0 +1,111 @@
+---
+title: "data-wrangling"
+format: html
+---
+
+##Load Libraries
+```{r}
+library(dplyr)
+library(tidyr)
+library(readr)
+```
+
+
+##Load Data
+
+bit.ly/data-wrangle-lesson-data
+```{r}
+catch_original <- read_csv("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1")
+```
+```{r}
+unique(catch_original$Region)
+```
+
+```{r}
+colnames(catch_original)
+```
+
+```{r}
+head(catch_original)
+```
+```{r}
+summary(catch_original)
+```
+
+summary(catch_original)
+#Data Cleaning and Wrangling
+#Pipe Operator
+
+#Select outcome
+
+Goal: remove the "All" and "notersRedCode' columns
+
+```{r}
+catch_data <- catch_original %>%
+  select("Region", "Year", "Chinook", "Sockeye", "Coho", "Pink", "Chum")
+```
+
+Another way of doing the same thing 
+```{r}
+catch_original %>% select(-All, -notesRegCode)
+```
+
+```{r}
+dplyr::glimpse(catch_data)
+```
+
+##Change column content
+
+GOAL: Convert the Chinook catch values to numeric type and overwrite the old Chinook column
+
+```{r}
+catch_clean <-catch_data %>%
+  mutate(Chinook = as.numeric(Chinook))
+```
+#Find which line is NA (and needs to be converted to #)
+```{r}
+which(is.as(catch_clean))
+```
+
+Rewrite this with the pipe operator
+```{r}
+catch_clean$Chinook %>% 
+  is.na() %>% 
+  which()
+```
+```{r}
+catch_data[i,]
+```
+
+GOAL: change the value of the 'chinook' column to 1 if the value is equal to the letter I
+
+```{r}
+catch_clean<- catch_data %>%
+  mutate(Chinook = 
+           if_else(condition = Chinook == "I", 
+                   true= "1",
+                   false = Chinook),
+         Chinook = as.numeric(Chinook))
+head(catch_clean)
+```
+
+
+## pivot_longer and pivot_wider
+
+GOAL: Transform data from wide format into a long format
+
+```{r}
+catch_long <-catch_clean %>%
+  #pivot longer all columns except Region and Year
+  pivot_longer(
+    cols = -c(Region, Year, Chinook),
+    names_to = "species",
+    values_to = "catch")
+  )
+```
+## Renaming columns
+
+GAOL Rename the 'catch' column to be called 'catch_thousands'
+
+## Summary Statistics
+bit.ly/3ppGUsQ
