@@ -1,0 +1,16 @@
+---
+title: "Wrangling Data Exercise"
+format: html
+---
+
+##About the data
+
+##Setup
+
+##Read and explore data
+
+##Exercise 1
+
+##Exercise 2
+
+##Exercise 6
