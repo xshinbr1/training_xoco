@@ -4,13 +4,50 @@ format: html
 ---
 
 ##About the data
+Data is from Spiny Lobster collection along a reef off the the coast of South-Central California between 2012 and 2022. Authors include LTER PIs of the Santa Barbara Coastal LTER: Reed, Daniel C, and Miller, Robert J. The data is available here: [https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-sbc.77.8]
 
 ##Setup
 
-##Read and explore data
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
 
-##Exercise 1
+##Read and explore data
+```{r}
+lobster_abundance <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-sbc.77.8&entityid=f32823fba432f58f66c06b589b7efac6")
+
+lobster_traps <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-sbc.77.8&entityid=66dd61c75bda17c23a3bce458c56ed84")
+```
 
 ##Exercise 2
+```{r}
+unique(lobster_abundance$SIZE_MM)
+
+lobster_abundance <- lobster_abundance %>%
+  mutate(SIZE_MM = ifelse(SIZE_MM == -99999, NA, SIZE_MM))
+```
+```{r}
+unique(lobster_abundance$SIZE_MM)
+```
+
+```
+subset_data <- subset(lobster_abundance, SIZE_MM > 50)
+
+```{r}
+subset_data <- lobster_abundance %>%
+  filter(SITE == "AQUE" & SIZE_MM > 70) %>%
+  select(SITE, SIZE_MM)
+```
+
+##Exercise 3
+
+```{r}
+subset_traps <- lobster_traps %>%
+  filter(is.na(abundance)) %>%
+  distinct(sites)
+```
 
 ##Exercise 6
