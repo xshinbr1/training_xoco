@@ -4,3 +4,80 @@ format: html
 ---
 
 
+```{r}
+library(usethis)
+library(tidycensus)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+##modifcation for fun
+```{r}
+census_api_key("4358d43e618892f3fbc01858028d33d50cb38010", install = TRUE, overwrite =TRUE)
+
+```
+
+#Decennial pop by state 2020
+```{r}
+pop_2020 <- get_decennial(
+    geography = "state",
+    variable = "P1_001N",
+    year = 2020)
+```
+```{r}
+table_p2_2020 <- get_decennial(
+    geography = "state",
+    table = "P2",
+    year = 2020)
+```
+```{r}
+unique(table_p2_2020$variable)
+```
+#Figure out what the codes mean in Census-speak; PL is population; DHC is demographic and housing
+```{r}
+vars_pl_2020 <-  load_variables(2020, "pl")
+
+## for 20210
+vars_pl_2010 <-  load_variables(2010, "pl")
+
+var_dhc_2020 <- vars_dhc_2020 <-  load_variables(2020, "dhc")
+```
+
+#Delta counties and/or tract information
+```{r}
+delta_hispanic <- get_decennial(
+  geography = "county",
+  state = "CA",
+  county = c("Alameda", "Contra Costa", "Sacramento", "San Joaquin", "Solano", "Yolo"),
+  variables = "P2_002N",
+  year = 2020)
+```
+```{r}
+delta_hispanic_t <- get_decennial(
+  geography = "tract",
+  state = "CA",
+  county = c("Alameda", "Contra Costa", "Sacramento", "San Joaquin", "Solano", "Yolo"),
+  variables = c("P2_002N","P2_003N"),
+  year = 2020,
+  output = "wide")
+```
+```{r}
+## Vector with race variables codes
+race_vars <- c(
+  Hispanic = "P2_002N",
+  White = "P2_005N",
+  Black = "P2_006N",
+  Native = "P2_007N",
+  Asian = "P2_008N",
+  HIPI = "P2_009N") ## Native Hawaiian and other Pacific Islander
+
+delta_race <- get_decennial(
+  geography = "county",
+  state = "CA",
+  county = c("Alameda", "Contra Costa", "Sacramento", "San Joaquin", "Solano", "Yolo"),
+  variables = race_vars,
+  summary_var = "P2_001N",
+  year = 2020)
+```
+
+

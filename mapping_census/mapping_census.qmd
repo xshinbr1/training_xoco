@@ -1,0 +1,201 @@
+---
+title: "Mapping Census Data"
+format: html
+---
+
+##Load libraries
+```{r}
+library(tidycensus)
+library(mapview)
+library(tigris)
+library(ggplot2)
+library(dplyr)
+library(sf)
+library(viridisLite)
+library(leafsync)
+```
+
+##Income in CA by county
+```{r}
+ca_income <- get_acs(
+    geography = "county",
+    variables = "B19013_001",
+    state = "CA",
+    year = 2021,
+    geometry = TRUE)
+
+
+plot(ca_income["estimate"])
+
+```
+```{r}
+head(ca_income)
+```
+##Interactive Plot with 'mapview' 
+```{r}
+mapview(ca_income, zcol = "estimate")
+```
+##Solano Couty Income
+```{r}
+solano_income <-get_acs(
+  geography = "tract",
+  variables = "B19013_001",
+  state = "CA",
+  county = "Solano",
+  geometry = TRUE
+)
+```
+
+
+```{r}
+##This loads all the variables for the ACS Survey and then you can use the search function when you open the tab
+variables_acs <- load_variables(2021, "acs5")
+```
+
+```{r}
+head(solano_income)
+```
+
+```{r}
+mapview(solano_income, zcol="estimate")
+
+```
+
+##Long vs. Wide
+```{r}
+race_var <- c(
+    Hispanic = "DP05_0071P",
+    White = "DP05_0077P",
+    Black = "DP05_0078P",
+    Asian = "DP05_0080P")
+
+##Default is Long
+alameda_race <- get_acs(
+  geography = "tract",
+  variables = race_var,
+  state = "CA",
+  county = "Alameda",
+  geometry = TRUE)
+
+head(alameda_race)
+
+##Transfer into a Wide Format
+alameda_race_wide <- get_acs(
+  geography = "tract",
+  variables = race_var,
+  state = "CA",
+  county = "Alameda",
+  geometry = TRUE,
+  output = "wide")
+    #Note that E=Estimate, and M=Standard of Error
+
+head(alameda_race)
+
+```
+
+##Erase Census overlay over water
+```{r}
+sf_use_s2(FALSE)
+solano_erase <- erase_water(solano_income,
+                            year=2021)
+mapview(solano_erase, zcol = "estimate")
+```
+
+##Mapping ACS Data
+```{r}
+alameda_hispanic <- filter(alameda_race, 
+                           variable == "Hispanic")
+##Data want to plot is the estimate column 
+ggplot(alameda_hispanic, 
+       aes(fill = estimate))+
+  geom_sf()+ ##geom_sf creates polygons and lat/long
+  theme_void()+ ## takes away the lat/long
+  scale_fill_viridis_b(option="rocket", n.breaks = 8)+ #this is a continuous color pallette, but if you change from option b to c then it creates bins, and add n.breaks = 8
+  labs(title = "Percentage of Hispanic Population by Census Tract",
+      subtitle = "Alameda County, CA",
+      fill = "ACS estimate",
+      caption = "2017-2021 ACS | tidycensus R package")
+```
+
+```{r}
+ggplot(alameda_race, aes(fill = estimate)) + 
+  geom_sf(color = NA) +  ## removes delimitation of each tract
+  theme_void() + 
+  scale_fill_viridis_c(option = "rocket") + 
+  facet_wrap(~variable) + #each race is then plotted on a different map
+  labs(title = "Race / ethnicity by Census tract",
+       subtitle = "Alameda County, California",
+       fill = "ACS estimate (%)",
+       caption = "2017-2021 ACS | tidycensus R package")
+```
+
+##Mapping count data (rather than ranges or percentages)
+```{r}
+
+alameda_race_counts <- get_acs(
+  geography = "tract",
+  variables = c(
+    Hispanic = "DP05_0071",
+    White = "DP05_0077",
+    Black = "DP05_0078",
+    Asian = "DP05_0080"),
+  state = "CA",
+  county = "Alameda",
+  geometry = TRUE)
+
+## Checking our data. Estimates are in counts not in %
+head(alameda_race_counts)
+
+```
+
+```{r}
+alameda_asian <-alameda_race_counts %>%
+  filter(variable=="Asian")
+
+centroid = st_centroid(alameda_asian)#transformed from all the different races/ethnicities but you want to transform from the subset
+head(centroid)
+```
+
+##Graduate Symbol Map
+```{r}
+
+ggplot()+
+  geom_sf(data = alameda_asian, color = "black", fill ="lightgray")+#these are polygons we are adding
+  geom_sf(data = centroid, aes(size = estimate),
+          alpha= 0.5,#the is opacity)
+          color = "navy")+
+  theme_void()+
+  labs(title = "Asian Population by Census Tract",
+       subtitle = "2017-2021 ACS, Alameda County, CA",
+       size = "ACS Estimate")+
+  scale_size_area(max_size = 6)#makes sure that 0 is half the size of 2500, and so on
+```
+
+##Dot density map
+```{r}
+alameda_race_dot <- as_dot_density(
+  alameda_race_counts,
+  value = "estimate",
+  values_per_dot = 200,
+  group = "variable"
+)
+```
+
+```{r}
+ggplot() + 
+  geom_sf(data = alameda_race_counts, color = "lightgrey", fill = "white") + 
+  geom_sf(data = alameda_race_dot, aes(color = variable), size = 0.5, alpha = 0.8) +
+  scale_color_brewer(palette = "Set2") + 
+  guides(color = guide_legend(override.aes = list(size = 3))) + ## overrides the size of the dots in the legend to make it more visible
+  theme_void() + 
+  labs(color = "Race / Ethnicity",
+       caption = "2017-2021 ACS | 1 dot = approximately 200 people")
+```
+
+
+##Subsetting data 
+
+
+
+
+

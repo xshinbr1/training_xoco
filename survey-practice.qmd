@@ -1,0 +1,100 @@
+---
+title: "survey-practice"
+format: html
+---
+```{r}
+library(qualtRics)
+library(tidyr)
+library(knitr)
+library(ggplot2)
+library(kableExtra)
+library(dplyr)
+library(googlesheets4)
+```
+
+##Connect to Qualtrics API
+## Best practice is to not leave the API Keys available
+
+```{r}
+qualtrics_api_credentials(api_key = "Zzuvz4t36VkB5akSB8W3Dryg5YgZ9lowoc3JEfEN",
+                          base_url="ucsb.co1.qualtrics.com", install = T)
+```
+
+##Get all surveys
+```{r}
+surveys <- all_surveys() ##Creates a dataframe called surveys
+```
+
+##Saving survey id
+```{r}
+i <-which(surveys$name == "Survey for Data Science Training") ##Defining an object i, that will save the position where your survey belongs in the training, this is if you have multiple surveys, that is the name that your survey has. In this case the teaching library only has one survey.
+
+id <- surveys$id[i] #This saves the ID of the name, so go look into surveys, and grab the ID number column in the position i
+
+```
+
+## List of questions
+```{r}
+questions <- survey_questions(id)
+kable(questions)%>%
+  kable_styling() ## read in the survey data, and you want to publish it, it LOOKS very nice
+```
+## Get the survey results
+```{r}
+survey_results <- fetch_survey(id)
+```
+##Clean Results, tallying the results
+###Question 2, this is multiple choice (no 'other' option)
+```{r}
+q2 <- survey_results%>%
+  select(Q2)%>%
+  group_by(Q2)%>%
+  summarise(n = n())
+
+kable(q2,col.names = c("How long have you been programming", "Number of Responses"))%>%
+  kable_styling()
+```
+###Question 3, multiple choice with an other option
+```{r}
+q3 <- survey_results %>%
+  select(Q3)%>%
+  group_by(Q3)%>%
+  summarize(n=n())
+
+ggplot(q3,
+       aes(x = Q3, y= n))+
+  geom_col()+
+  labs(x = "What language do you currently use most frequently")+
+  theme_bw()
+```
+###Free text review
+```{r}
+q3_text <- survey_results %>%
+  select(Q3_7_TEXT)%>%
+  drop_na()
+
+kable(q3_text, col.names = "Other responses")%>%
+  kable_styling()
+```
+
+##Question 4 survey results
+```{r}
+q4 <- survey_results%>%
+  select(Q4)%>%
+  rename("What data science tool or language are you most excited to learn next" = Q4)%>%
+  drop_na()
+
+kable(q4)%>%
+  kable_styling()
+```
+
+
+```{r}
+responses <- read_sheet("https://docs.google.com/spreadsheets/d/1CSG__ejXQNZdwXc1QK8dKouxphP520bjUOnZ5SzOVP8/edit?usp=sharing")
+
+
+```
+
+
+
+

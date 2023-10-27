@@ -1,0 +1,139 @@
+---
+title: "demo-tidy-text-exercise"
+format: html
+---
+```{r}
+library(gutenbergr) # access public domain texts from Project Gutenberg
+library(tidytext) # text mining using tidy tools
+library(dplyr) # wrangle data
+library(ggplot2) # plot data
+```
+```{r}
+gutenberg_works(title == "The Strange Case of Dr. Jekyll and Mr. Hyde") # jekyll hyde text
+```
+# access text data using id number from `gutenberg_works()
+```{r}
+jekyll_hyde <- gutenberg_download(42)
+```
+```{r}
+tidy_jekyll <- jekyll_hyde %>% 
+    unnest_tokens(word, text)
+```
+
+```{r}
+# remove stop words
+tidy_jekyll <- tidy_jekyll %>% dplyr::anti_join(stop_words, by = "word")
+```
+
+```{r}
+count_jekyll <- tidy_jekyll %>%
+    count(word) %>% 
+    slice_max(n = 10, order_by = n)
+```
+
+```{r}
+ggplot(data = count_jekyll, aes(n, reorder(word, n))) +
+  geom_col() +
+    labs(x = "Count",
+         y = "Token")
+```
+```{r}
+ggplot(data = count_jekyll, aes(x=word, y=n)) +
+    geom_point() +
+    geom_segment(aes(x=word, xend=word, y=0, yend=n)) +
+    coord_flip() +
+    labs(x = "Token",
+         y = "Count")
+```
+```{r}
+ggplot(data = count_jekyll, aes(x=reorder(word, n), y=n)) +
+    geom_point(color="cyan4") +
+    geom_segment(aes(x=word, xend=word, y=0, yend=n), color="cyan4") +
+    coord_flip() +
+    labs(title = "Top Ten Words in The Dr. Jekyll and Mr. Hyde",
+         x = NULL,
+         y = "Count") +
+    theme_minimal() +
+    theme(
+        panel.grid.major.y = element_blank()
+    )
+```
+
+```{r}
+library(tidytext) # tidy text tools
+library(quanteda) # create a corpus
+library(pdftools) # read in data
+library(dplyr) # wrangle data
+library(stringr) # string manipulation
+library(ggplot2) # plots
+library(readr)
+```
+
+#Read in data
+```{r}
+path_df <- "data/dsc_chap4.pdf"
+dp_ch4 <- pdftools::pdf_text(path_df)
+my_stop_words <- read_csv("data/custom_stop_words.csv")%>% ##note: To run read_csv requires library(readr)
+  rename(word=custom_word) ##note: we need this because the terms are different in my_stop_words vs. stop_words, I could just go back into the file to rename them
+
+```
+
+#Turn it into a corpus
+```{r}
+corpus_dp_ch <- quanteda::corpus(dp_ch4)
+```
+
+#Make corpus tidy
+```{r}
+tidy_dp_ch <- tidytext::tidy(corpus_dp_ch)
+```
+
+#Tokenize the words 
+```{r}
+unnest_dp_ch4 <- tidy_dp_ch %>% 
+    unnest_tokens(output = word,
+                  input = text) 
+```
+
+```{r}
+words_dp_ch4 <- unnest_dp_ch4 %>% 
+    dplyr::anti_join(stop_words)%>%
+  dplyr::anti_join(my_stop_words)
+```
+
+```{r}
+count_dp_ch4 <- words_dp_ch4 %>%
+    count(word) %>%
+    slice_max(n = 10, order_by = n)
+```
+
+```{r}
+# bar plot
+ggplot(count_dp_ch4, aes(x = reorder(word, n), y = n)) +
+    geom_col() +
+    coord_flip() +
+    labs(title = "Top 10 Most Frequently Occurring Words in Chapter 4 of the Delta Plan",
+         x = NULL,
+         y = "count") +
+    theme_minimal()
+```
+```{r}
+# lollipop plot
+ggplot(data = count_dp_ch4, aes(x=reorder(word, n), y=n)) +
+    geom_point() +
+    geom_segment(aes(x=word, xend=word, y=0, yend=n)) +
+    coord_flip() +
+    labs(title = "Top 10 Most Frequently Occurring Words in Chapter 4 of the Delta Plan",
+         x = NULL,
+         y = "Count") +
+    theme_minimal()
+```
+
+```{r}
+# wordcloud
+wordcloud(words = count_dp_ch4$word,
+          freq = count_dp_ch4$n, min.freq= 1,
+          max.words=200, random.order=FALSE, rot.per=0.35,
+          colors=brewer.pal(7, "Dark2"))
+```
+

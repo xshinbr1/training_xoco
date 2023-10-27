@@ -5,5 +5,7 @@ format: html
 
 - [Introduction to Quarto](intro-to-quarto.html)
 - [Cleaning and Wrangling Data](wrangling-and-cleaning.qmd)
-- Data Visualization 
-- Spatial Data in R 
+- [Data Visualization](data-visualization.qmd) 
+- [Spatial Data in R](geospatial.sf.qmd) 
+- [Text analysis](demo-tidy-text-exercise.qmd)
+- [Survey analysis](survey-practice.qmd)
